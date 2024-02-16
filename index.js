@@ -1,28 +1,20 @@
 const express = require("express");
+const usersJson = require("./users.json");
+require("./mongodb");
 
 const port = 1000;
+
+const fs = require("fs");
 const myServer = express();
 
-myServer.get("/", (request, response) => {
-  response.send("hello manaihaeeeean!");
-});
+require("./users")(myServer);
+require("./posts")
+(myServer);
 
-// myServer.get("/about", (request, response) => {
-//   response.send("This is about route");
-// });
 
-// myServer.get("/about/:id", (request, response) => {
-//     const {id} = request.params;
-//     response.send("This is about route " + id);
-// });
-
-// myServer.get("/about/:id/:name", (request, response) => {
-//     const {id} = request.params;
-//     console.log ( request.body );
-//     response.send("This is about route " + id);
-// });
+myServer.use(express.json());
 
 
 myServer.listen(port, () => {
-  console.log("myServer running greatly!");
+  console.log("myServer running !");
 });

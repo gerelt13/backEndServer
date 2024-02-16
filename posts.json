@@ -1,0 +1,30 @@
+[
+  {
+    "id": "1",
+    "text": "This is my first post",
+    "likes": 0,
+    "createdAt": "Now",
+    "owner": "First"
+  },
+  {
+    "id": "2",
+    "text": "This is my second post",
+    "likes": 0,
+    "createdAt": "Now",
+    "owner": "Second"
+  },
+  {
+    "id": "3",
+    "text": "This is my third post",
+    "likes": 0,
+    "createdAt": "Now",
+    "owner": "Third"
+  },
+  {
+    "id": "4",
+    "text": "This is my fourth post",
+    "likes": 0,
+    "createdAt": "Now",
+    "owner": "Fourth"
+  }
+]
