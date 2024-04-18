@@ -24,6 +24,10 @@ const client = new MongoClient(uri, {
   },
 });
 
+myServer.get("/", (req, res) => {
+  res.status(200).json("working");
+});
+
 myServer.post("/register", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -186,10 +190,6 @@ myServer.put("/edit/:userId", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-
-
-
 
 myServer.use(expressjwt({ secret: JWT_SECRET, algorithms: ["HS256"] }));
 
