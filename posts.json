@@ -4,14 +4,14 @@
     "text": "This is my first post",
     "likes": 0,
     "createdAt": "Now",
-    "owner": "First"
+    "owner": "11"
   },
   {
     "id": "2",
     "text": "This is my second post",
     "likes": 0,
     "createdAt": "Now",
-    "owner": "Second"
+    "owner": "11"
   },
   {
     "id": "3",

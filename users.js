@@ -1,13 +1,36 @@
-const usersJson = require('./users.json');
+const usersJson = require("./users.json");
+// const postsJson = require("./posts.json");
+
+
 const fs = require("fs");
+const postsJson = require("./posts.json");
+const comments = require("./comments");
+
+const getUserPosts = (userId) => {
+  return postsJson.filter((value) => value.owner == userId);
+};
 
 module.exports = function (myServer) {
-    myServer.get("/users", ( Gerelt1, Gerelt2) => {Gerelt2.json(usersJson); 
-    });
-
-
   myServer.get("/users", (request, response) => {
-    response.json(usersJson);
+    const users = [];
+    usersJson.map((user) => {
+      users.push(user);
+    });
+    response.json(users);
+  });
+
+  myServer.get("/users/:id", (request, response) => {
+    const userId = request.params.id;
+    for (let i = 0; i < usersJson.length; i++) {
+      if (usersJson[i].id == userId) {
+        const posts = getUserPosts(userId);
+        response.json({
+          ...usersJson[i],
+          posts: posts,
+        });
+      }
+    }
+    response.send("User not found!");
   });
 
   myServer.post("/users/create", (request, response) => {
@@ -20,24 +43,47 @@ module.exports = function (myServer) {
     fs.writeFileSync("./users.json", JSON.stringify(usersJson));
     response.send(usersJson);
   });
-  
-  myServer.get("/users/:id", (request, response) => {
-    const userId = request.params.id;
-    const found = usersJson.find((user) => user.id === userId);
-    if (found) {
-      response.json(found);
-    } else {
-      response.send("user not found");
-      console.log(userId);
-    }
-  });
-  
+
+
+
+
+
   myServer.put("/users/:id", (request, response) => {
+    const userId = request.params.id;
     const body = request.body;
-    const { name } = body;
-    response.send(" Called put" + name + " on " + Gerelt);
+    const { name, posts } = body
+    // console.log(body, usersJson);
+    const user = usersJson.find((user) => user.id == userId);
+    user.name = name;
+    fs.writeFileSync("./users.json", JSON.stringify(usersJson));
+
+    posts.map((post) => {
+      const userPost = postsJson.find((postFile) => postFile.id == post.id);
+      userPost.name = post.name;
+      userPost.comment = post.comment;
+      userPost.created = post.created;
+      userPost.likes = post.likes;
+
+      fs.writeFileSync("./posts.json", JSON.stringify(postsJson));
+    });
+
+    for (let i = 0; i < usersJson.length; i++) {
+      if (usersJson[i].id == userId) {
+        const posts = getUserPosts(userId);
+        response.json({
+          ...usersJson[i],
+          posts: posts,
+        });
+      }
+    }
+    response.send("User not found");
   });
-  
+
+
+
+
+
+
   myServer.put("/users/:id", (request, response) => {
     const userId = request.params.id;
     const newId = request.body.name;
@@ -46,14 +92,14 @@ module.exports = function (myServer) {
       updateId.name = newId;
     }
     fs.writeFileSync("./users.json", JSON.stringify(usersJson));
-  
+
     response.json(updateId);
   });
-  
+
   myServer.delete("/users/:id", (request, response) => {
     const userId = request.params.id;
     const rest = usersJson.filter((user) => user.id !== userId);
-  
+
     fs.writeFileSync("./users.json", JSON.stringify(rest));
     response.json(rest);
   });
