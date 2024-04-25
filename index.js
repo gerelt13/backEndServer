@@ -173,6 +173,10 @@ myServer.post("/reset-password", async (req, res) => {
   }
 });
 
+
+
+
+
 myServer.put("/edit/:userId", async (req, res) => {
   try {
     const { userId } = req.body;
@@ -181,7 +185,18 @@ myServer.put("/edit/:userId", async (req, res) => {
     const PropertyData = client.db("users").collection("collection");
     const EditedProperty = await PropertyData.findOneAndUpdate(
       { _id: new ObjectId(String(userId)) },
-      { $set: { title: updatedProperty } },
+      {
+        $set: {
+          title: updatedProperty,
+          address: address,
+          city: city,
+          broker: broker,
+          bedrooms: bedrooms,
+          bathrooms: bathrooms,
+          description: description,
+        },
+      },
+
       { returnOriginal: false }
     );
 
@@ -190,6 +205,35 @@ myServer.put("/edit/:userId", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
+
+
+myServer.delete("/properties/deletebyid/:id", async (req, res) => {
+  try {
+    const deletebyId = req.params.id;
+    await client.connect();
+    const RealtorProperty = await client
+      .db("sample_realtor")
+      .collection("properties");
+    const deleteProperty = await RealtorProperty.deleteOne({
+      _id: new ObjectId(String(deletebyId)),
+    });
+    res.json(deleteProperty);
+  } catch (error) {
+    console.error("Error deleting property:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+
+
+
+
+
+
 
 myServer.use(expressjwt({ secret: JWT_SECRET, algorithms: ["HS256"] }));
 
