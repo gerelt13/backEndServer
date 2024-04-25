@@ -126,6 +126,7 @@ const createMongoEndpoint = (myServer) => {
   myServer.get("/properties/bedrooms/:bedroom", async (req, res) => {
     try {
       const findbybedroom = req.params.bedroom;
+      console.log(findbybedroom);
       await client.connect();
       const RealtorProperty = await client
         .db("sample_realtor")
@@ -174,7 +175,7 @@ const createMongoEndpoint = (myServer) => {
     try {
       const updatebyID = req.params.id;
       const updateFields = req.body;
-      const fieldToUpdate = Object.keys(updateFields)[0];
+
       const ALLOWED_FIELDS = [
         "address",
         "city",
@@ -187,17 +188,21 @@ const createMongoEndpoint = (myServer) => {
         "description",
         "image_url",
       ];
-
-      if (!ALLOWED_FIELDS.includes(fieldToUpdate)) {
-        throw new Error(`${fieldToUpdate} is not a valid field to update.`);
-      }
+      Object.keys(updateFields).map((key) => {
+        if (!ALLOWED_FIELDS.includes(key)) {
+          throw new Error(`${key} is not a valid field to update.`);
+        }
+      });
       await client.connect();
       const RealtorProperty = client
         .db("sample_realtor")
         .collection("properties");
 
       const updateObject = { $set: {} };
-      updateObject.$set[fieldToUpdate] = updateFields[fieldToUpdate];
+
+      Object.keys(updateFields).map((key) => {
+        updateObject.$set[key] = updateFields[key];
+      });
 
       const updatedProperty = await RealtorProperty.updateOne(
         { _id: new ObjectId(String(updatebyID)) },

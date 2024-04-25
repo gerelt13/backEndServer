@@ -30,9 +30,11 @@ myServer.get("/", (req, res) => {
 
 myServer.post("/register", async (req, res) => {
   try {
+    console.log("test");
     const { email, password } = req.body;
     if (!email || !password) {
       res.status(401).send("Email/password required");
+      return;
     }
     await client.connect();
     const db = client.db("users");
@@ -47,11 +49,14 @@ myServer.post("/register", async (req, res) => {
         expiresIn: "1h",
       });
       res.json({ token });
+      return;
     } else {
       res.status(401).json({ error: "User already registered" });
+      return;
     }
   } catch (e) {
     res.status(500).json("Error");
+    return;
   }
 });
 
@@ -173,10 +178,6 @@ myServer.post("/reset-password", async (req, res) => {
   }
 });
 
-
-
-
-
 myServer.put("/edit/:userId", async (req, res) => {
   try {
     const { userId } = req.body;
@@ -206,9 +207,6 @@ myServer.put("/edit/:userId", async (req, res) => {
   }
 });
 
-
-
-
 myServer.delete("/properties/deletebyid/:id", async (req, res) => {
   try {
     const deletebyId = req.params.id;
@@ -225,15 +223,6 @@ myServer.delete("/properties/deletebyid/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-
-
-
-
-
-
-
-
 
 myServer.use(expressjwt({ secret: JWT_SECRET, algorithms: ["HS256"] }));
 
